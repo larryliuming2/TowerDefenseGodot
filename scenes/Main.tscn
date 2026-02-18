@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1x2y3z4w5v6"]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1_script"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" id="2_bg"]
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0.133333, 0.545098, 0.133333, 1)
+
+[node name="Path2D" type="Path2D" id="3_path"]
+curve = SubResource("Curve2D_zig")
+
+[node name="SpawnerTimer" type="Timer" id="4_timer"]
+wait_time = 2.0
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" id="5_ui"]
+
+[node name="HUD" type="Control" id="6_hud"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GoldLabel" type="Label" id="7_gold"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 120.0
+offset_bottom = 46.0
+text = "Gold: 100"
+
+[node name="LivesLabel" type="Label" id="8_lives"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 50.0
+offset_right = 120.0
+offset_bottom = 76.0
+text = "Lives: 20"
+
+[node name="SummonButton" type="Button" id="9_btn"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -80.0
+offset_right = 100.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Summon Sword Girl (50G)"
