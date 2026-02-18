@@ -1,25 +1,30 @@
-[gd_scene load_steps=2 format=3 uid="uid://b1x2y3z4w5v6"]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/Main.gd" id="1_script"]
+
+[sub_resource type="Curve2D" id="Curve2D_zig"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 100, 300, 0, 0, 0, 0, 300, 100, 0, 0, 0, 0, 500, 500, 0, 0, 0, 0, 700, 100, 0, 0, 0, 0, 900, 500, 0, 0, 0, 0, 1100, 300)
+}
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_script")
 
-[node name="Background" type="ColorRect" id="2_bg"]
+[node name="Background" type="ColorRect" parent="."]
 offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0.133333, 0.545098, 0.133333, 1)
 
-[node name="Path2D" type="Path2D" id="3_path"]
+[node name="Path2D" type="Path2D" parent="."]
 curve = SubResource("Curve2D_zig")
 
-[node name="SpawnerTimer" type="Timer" id="4_timer"]
+[node name="SpawnerTimer" type="Timer" parent="."]
 wait_time = 2.0
 autostart = true
 
-[node name="CanvasLayer" type="CanvasLayer" id="5_ui"]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="HUD" type="Control" id="6_hud"]
+[node name="HUD" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,7 +32,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GoldLabel" type="Label" id="7_gold"]
+[node name="GoldLabel" type="Label" parent="CanvasLayer/HUD"]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 20.0
@@ -35,7 +40,7 @@ offset_right = 120.0
 offset_bottom = 46.0
 text = "Gold: 100"
 
-[node name="LivesLabel" type="Label" id="8_lives"]
+[node name="LivesLabel" type="Label" parent="CanvasLayer/HUD"]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 50.0
@@ -43,7 +48,7 @@ offset_right = 120.0
 offset_bottom = 76.0
 text = "Lives: 20"
 
-[node name="SummonButton" type="Button" id="9_btn"]
+[node name="SummonButton" type="Button" parent="CanvasLayer/HUD"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -51,9 +56,21 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -100.0
-offset_top = -80.0
+offset_top = -100.0
 offset_right = 100.0
-offset_bottom = -20.0
+offset_bottom = -40.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Summon Sword Girl (50G)"
+
+[node name="SpeedButton" type="Button" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 60.0
+grow_horizontal = 0
+text = "Speed: 1x"

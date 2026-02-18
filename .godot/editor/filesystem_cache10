@@ -1,0 +1,15 @@
+63f7b34db8d8cdea90c76aacccf841ec
+::res://::1771458268
+export_presets.cfg::TextFile::-1::1771457756::0::1::::<><><>0<>0<><>::
+::res://assets/::1771457035
+::res://assets/sprites/::1771457035
+::res://export/::1771457752
+::res://export/web/::1771457752
+::res://scenes/::1771457221
+Main.tscn::PackedScene::125308677503113985::1771457221::0::1::::<><><>0<>0<><>::res://scripts/Main.gd
+::res://scripts/::1771458109
+Enemy.gd::GDScript::9194831596860863172::1771457143::0::1::::<>PathFollow2D<><>0<>0<><>::
+Main.gd::GDScript::5570947448472114303::1771457486::0::1::::<>Node2D<><>0<>0<><>::
+SummonEffect.gd::GDScript::3204959875287527879::1771457391::0::1::::<>Node2D<><>0<>0<><>::
+SwordGirl.gd::GDScript::5853175452965692948::1771457188::0::1::::<>Node2D<><>0<>0<><>::
+Tower.gd::GDScript::581531906163349339::1771457147::0::1::::<>Node2D<><>0<>0<><>::
