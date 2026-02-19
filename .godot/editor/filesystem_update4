@@ -1,2 +1,4 @@
 res://scripts/Tower.gd
 res://scripts/Main.gd
+res://scenes/Enemy.tscn
+res://scripts/Enemy.gd

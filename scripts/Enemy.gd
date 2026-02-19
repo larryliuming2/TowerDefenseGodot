@@ -4,6 +4,9 @@ extends PathFollow2D
 @export var health = 50
 @export var reward = 10
 
+func _ready():
+	add_to_group("enemies")
+
 func _process(delta):
 	progress += speed * delta
 	if progress_ratio >= 1.0:
