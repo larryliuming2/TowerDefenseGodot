@@ -25,9 +25,11 @@ func find_target():
 		var max_progress = -1
 		for area in enemies:
 			var enemy = area.get_parent()
-			if enemy.progress > max_progress:
-				max_progress = enemy.progress
-				best_enemy = enemy
+			# Check if it's actually an enemy (has progress) and not another tower
+			if enemy.has_method("get_progress") or "progress" in enemy:
+				if enemy.progress > max_progress:
+					max_progress = enemy.progress
+					best_enemy = enemy
 		target = best_enemy
 
 func fire():
