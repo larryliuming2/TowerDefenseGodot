@@ -20,17 +20,18 @@ func _process(_delta):
 func find_target():
 	var enemies = $RangeArea.get_overlapping_areas()
 	if enemies.size() > 0:
-		# Target the one furthest along the path
 		var best_enemy = null
 		var max_progress = -1
 		for area in enemies:
 			var enemy = area.get_parent()
-			# Check if it's actually an enemy (has progress) and not another tower
-			if enemy.has_method("get_progress") or "progress" in enemy:
+			# Check if the parent is an Enemy (PathFollow2D)
+			if enemy is PathFollow2D:
 				if enemy.progress > max_progress:
 					max_progress = enemy.progress
 					best_enemy = enemy
 		target = best_enemy
+	else:
+		target = null
 
 func fire():
 	can_fire = false

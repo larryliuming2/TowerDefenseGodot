@@ -25,21 +25,45 @@ func _on_speed_button_pressed():
 	Engine.time_scale = 2.0 if is_fast_forward else 1.0
 	$CanvasLayer/HUD/SpeedButton.text = "Speed: 2x" if is_fast_forward else "Speed: 1x"
 
-func _on_summon_pressed():
-	if gold >= 50:
-		gold -= 50
-		update_ui()
-		# For now, we'll place at a random spot or follow mouse in next step
-		spawn_tower(get_global_mouse_position())
+var is_placing_tower = false
+var ghost_tower = null
 
-func spawn_tower(pos):
-	var tower = load("res://scenes/SwordGirl.tscn").instantiate()
-	tower.position = pos
-	add_child(tower)
+func _process(_delta):
+	if is_placing_tower and ghost_tower:
+		ghost_tower.position = get_global_mouse_position()
+		if Input.is_action_just_pressed("click"): # We'll define this in next step
+			confirm_placement()
+
+func _on_summon_pressed():
+	if gold >= 50 and not is_placing_tower:
+		is_placing_tower = true
+		ghost_tower = load("res://scenes/SwordGirl.tscn").instantiate()
+		ghost_tower.modulate.a = 0.5 # Make it semi-transparent
+		add_child(ghost_tower)
+
+func _input(event):
+	if is_placing_tower and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			confirm_placement()
+		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			cancel_placement()
+
+func confirm_placement():
+	gold -= 50
+	update_ui()
+	ghost_tower.modulate.a = 1.0 # Make it solid
 	# Add the cherry blossom effect!
 	var effect = load("res://scenes/SummonEffect.tscn").instantiate()
-	effect.position = pos
+	effect.position = ghost_tower.position
 	add_child(effect)
+	
+	is_placing_tower = false
+	ghost_tower = null
+
+func cancel_placement():
+	is_placing_tower = false
+	ghost_tower.queue_free()
+	ghost_tower = null
 
 func _on_spawner_timeout():
 	spawn_enemy()
