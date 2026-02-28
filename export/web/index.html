@@ -3,7 +3,9 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
-		<title></title>
+		<meta name="screen-orientation" content="landscape">
+		<meta name="x5-orientation" content="landscape">
+		<title>Tower Defense</title>
 		<style>
 html, body, #canvas {
 	margin: 0;
@@ -89,12 +91,54 @@ body {
 	text-align: center;
 	z-index: 1;
 }
+
+/* Force landscape orientation styles */
+@media screen and (orientation: portrait) {
+	body {
+		transform: rotate(90deg);
+		transform-origin: left top;
+		width: 100vh;
+		height: 100vw;
+		overflow: hidden;
+		position: absolute;
+		top: 0;
+		left: 100vw;
+	}
+}
+
+#rotate-hint {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #000;
+	color: #fff;
+	z-index: 9999;
+	justify-content: center;
+	align-items: center;
+	font-size: 24px;
+	text-align: center;
+	padding: 20px;
+}
+
+@media screen and (orientation: portrait) {
+	#rotate-hint {
+		display: flex;
+	}
+}
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
 
 	</head>
 	<body>
+		<div id="rotate-hint">
+			📱 请旋转手机至横屏游玩<br>
+			Please rotate your device to landscape
+		</div>
+
 		<canvas id="canvas">
 			Your browser does not support the canvas tag.
 		</canvas>
@@ -111,7 +155,24 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":16676,"index.wasm":37685705},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+// Force landscape orientation on mobile
+if (screen.orientation && screen.orientation.lock) {
+	screen.orientation.lock('landscape').catch(function(e) {
+		console.log('Orientation lock failed:', e);
+	});
+}
+
+// Also try to unlock and relock on visibility change
+document.addEventListener('visibilitychange', function() {
+	if (!document.hidden && screen.orientation && screen.orientation.lock) {
+		screen.orientation.lock('landscape').catch(function(e) {
+			console.log('Orientation lock failed on visibility change:', e);
+		});
+	}
+});
+</script>
+		<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":301684,"index.wasm":37685705},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -217,4 +278,3 @@ const engine = new Engine(GODOT_CONFIG);
 		</script>
 	</body>
 </html>
-

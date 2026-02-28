@@ -1,0 +1,57 @@
+[gd_scene load_steps=2 format=3]
+
+[node name="SelectionMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 200.0
+offset_bottom = 200.0
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -60.0
+offset_right = 50.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="ArcherButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Archer (75g)"
+
+[node name="MagicButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Magic (100g)"
+
+[node name="BoomButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Boom (150g)"
+
+[node name="SwordGirlButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Sword (50g)"
+
+[node name="CancelButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Cancel"
