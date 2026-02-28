@@ -28,11 +28,37 @@ func _ready():
 	# Setup selection menu
 	add_child(selection_menu)
 	selection_menu.hide()
-	selection_menu.get_node("VBoxContainer/ArcherButton").pressed.connect(func(): start_placing("Archer", 75))
-	selection_menu.get_node("VBoxContainer/MagicButton").pressed.connect(func(): start_placing("Magic", 100))
-	selection_menu.get_node("VBoxContainer/BoomButton").pressed.connect(func(): start_placing("Boom", 150))
-	selection_menu.get_node("VBoxContainer/SwordGirlButton").pressed.connect(func(): start_placing("Sword", 50))
-	selection_menu.get_node("VBoxContainer/CancelButton").pressed.connect(func(): selection_menu.hide())
+	
+	# Connect buttons with explicit prints for debugging
+	var archer_btn = selection_menu.get_node("VBoxContainer/ArcherButton")
+	archer_btn.pressed.connect(func(): 
+		print("Archer button pressed!")
+		start_placing("Archer", 75)
+	)
+	
+	var magic_btn = selection_menu.get_node("VBoxContainer/MagicButton")
+	magic_btn.pressed.connect(func(): 
+		print("Magic button pressed!")
+		start_placing("Magic", 100)
+	)
+	
+	var boom_btn = selection_menu.get_node("VBoxContainer/BoomButton")
+	boom_btn.pressed.connect(func(): 
+		print("Boom button pressed!")
+		start_placing("Boom", 150)
+	)
+	
+	var sword_btn = selection_menu.get_node("VBoxContainer/SwordGirlButton")
+	sword_btn.pressed.connect(func(): 
+		print("Sword button pressed!")
+		start_placing("Sword", 50)
+	)
+	
+	var cancel_btn = selection_menu.get_node("VBoxContainer/CancelButton")
+	cancel_btn.pressed.connect(func(): 
+		print("Cancel button pressed!")
+		selection_menu.hide()
+	)
 	
 	print("Tower Defense Game Started!")
 
@@ -69,11 +95,14 @@ func _on_speed_button_pressed():
 
 func _on_summon_pressed():
 	if not is_placing_tower:
-		# Center the menu on the mouse
-		selection_menu.position = get_global_mouse_position() - Vector2(100, 100)
+		# Center the menu on the mouse/touch position
+		var pos = get_global_mouse_position()
+		selection_menu.position = pos - Vector2(100, 100)
 		selection_menu.show()
-		# Bring to front
-		selection_menu.z_index = 100
+		# Bring to front and ensure it's above other UI
+		selection_menu.z_index = 1000
+		selection_menu.top_level = true
+		print("Menu shown at position: ", selection_menu.position)
 
 func start_placing(type, cost):
 	print("Starting to place: ", type, " Cost: ", cost)
