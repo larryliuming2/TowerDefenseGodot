@@ -7,10 +7,10 @@ enemy.png::CompressedTexture2D::5019363471084798173::1771465917::1771465985::1::
 ::res://assets/sprites/defenders/::1771466682
 menu_base.png::CompressedTexture2D::8395269638926303508::1771466629::1771466682::1::::<><><>0<>0<>f45d52cd794850ffef87ab476bcaa0dd<>res://.godot/imported/menu_base.png-b0f3e7a976dfbf22df5dc724b9328693.ctex::
 ::res://export/::1771457752
-::res://export/web/::1772280719
-index.apple-touch-icon.png::CompressedTexture2D::490595785831967323::1772280719::1771465985::1::::<><><>0<>0<>29e1c4eb292ec32756d22fac60a09d04<>res://.godot/imported/index.apple-touch-icon.png-aebfb1e41ce4a993e231d731c37e24be.ctex::
-index.icon.png::CompressedTexture2D::150221029993496428::1772280719::1772279818::1::::<><><>0<>0<>c1d5d96fa752bbc8ee475a7e5751f25c<>res://.godot/imported/index.icon.png-71c9d3338695ba24c45c706011eaad77.ctex::
-index.png::CompressedTexture2D::4427313206171101907::1772280719::1771465985::1::::<><><>0<>0<>a3462b8da8ee045de4eaae3364d3a385<>res://.godot/imported/index.png-c2d8175aa2006ac735a751c5803e019d.ctex::
+::res://export/web/::1773472872
+index.apple-touch-icon.png::CompressedTexture2D::490595785831967323::1773472872::1771465985::1::::<><><>0<>0<>29e1c4eb292ec32756d22fac60a09d04<>res://.godot/imported/index.apple-touch-icon.png-aebfb1e41ce4a993e231d731c37e24be.ctex::
+index.icon.png::CompressedTexture2D::150221029993496428::1773472872::1772279818::1::::<><><>0<>0<>c1d5d96fa752bbc8ee475a7e5751f25c<>res://.godot/imported/index.icon.png-71c9d3338695ba24c45c706011eaad77.ctex::
+index.png::CompressedTexture2D::4427313206171101907::1773472872::1771465985::1::::<><><>0<>0<>a3462b8da8ee045de4eaae3364d3a385<>res://.godot/imported/index.png-c2d8175aa2006ac735a751c5803e019d.ctex::
 ::res://scenes/::1771467282
 Archer.tscn::PackedScene::-1::1771467282::0::1::::<><><>0<>0<><>::res://scripts/Archer.gd<>res://assets/sprites/enemy.png
 Boom.tscn::PackedScene::-1::1771467282::0::1::::<><><>0<>0<><>::res://scripts/Boom.gd<>res://assets/sprites/enemy.png
