@@ -1,42 +1,41 @@
 extends Node2D
 
 @export var damage = 10
-@export var fire_rate = 1.0 # Shots per second
+@export var fire_rate = 1.0
 @export var range_radius = 200
 
 var target = null
 var can_fire = true
 
 func _ready():
-	$RangeArea/CollisionShape2D.shape.radius = range_radius
+	# Duplicate the shape so each tower instance has its own radius
+	var shape = $RangeArea/CollisionShape2D.shape.duplicate()
+	shape.radius = range_radius
+	$RangeArea/CollisionShape2D.shape = shape
 
-func find_target():
-	var best_enemy = null
-	var max_progress = -1
-	
-	# Get all enemies in the scene
+func _process(_delta):
+	# Only search for targets periodically-ish (every frame is fine for now)
 	var enemies = get_tree().get_nodes_in_group("enemies")
+	var best_enemy = null
+	var max_progress = -1.0
 	
 	for enemy in enemies:
 		if is_instance_valid(enemy):
-			var distance = global_position.distance_to(enemy.global_position)
-			if distance <= range_radius:
-				# Target the one furthest along the path
-				if enemy.progress > max_progress:
-					max_progress = enemy.progress
-					best_enemy = enemy
+			var dist = global_position.distance_to(enemy.global_position)
+			if dist <= range_radius and enemy.progress > max_progress:
+				max_progress = enemy.progress
+				best_enemy = enemy
 	
 	target = best_enemy
-
-func _process(_delta):
-	find_target() # Keep looking for the best target every frame
-	if target and is_instance_valid(target):
-		if can_fire:
-			fire()
+	
+	if target and is_instance_valid(target) and can_fire:
+		fire()
 
 func fire():
+	if not is_instance_valid(target):
+		return
 	can_fire = false
-	# Visuals: Show attack animation/projectile here
 	target.hit(damage)
-	await get_tree().create_timer(1.0 / fire_rate).timeout
-	can_fire = true
+	# Use a one-shot timer for cooldown
+	var timer = get_tree().create_timer(1.0 / fire_rate)
+	timer.timeout.connect(func(): can_fire = true)
