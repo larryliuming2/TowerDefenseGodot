@@ -31,14 +31,12 @@ var tower_scenes = {
 }
 
 var selection_menu: Control = null
-var menu_just_closed = false
 
 func _ready():
 	update_ui()
 	spawner_timer.timeout.connect(_on_spawner_timeout)
 	$CanvasLayer/HUD/SpeedButton.pressed.connect(_on_speed_button_pressed)
 	_build_selection_menu()
-	print("Tower Defense Game Initialized! Click anywhere on the map to build.")
 
 func _build_selection_menu():
 	selection_menu = Control.new()
@@ -56,7 +54,7 @@ func _build_selection_menu():
 	selection_menu.add_child(bg)
 
 	var title = Label.new()
-	title.text = "⚔️ Build Tower"
+	title.text = "Build Tower"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.position = Vector2(-85, -105)
 	title.size = Vector2(170, 30)
@@ -64,10 +62,10 @@ func _build_selection_menu():
 	selection_menu.add_child(title)
 
 	var tower_data = [
-		{"name": "Sword", "label": "🗡 Sword (50g)", "cost": 50},
-		{"name": "Archer", "label": "🏹 Archer (75g)", "cost": 75},
-		{"name": "Magic", "label": "🔮 Magic (100g)", "cost": 100},
-		{"name": "Boom", "label": "💣 Boom (150g)", "cost": 150},
+		{"name": "Sword", "label": "Sword (50g)", "cost": 50},
+		{"name": "Archer", "label": "Archer (75g)", "cost": 75},
+		{"name": "Magic", "label": "Magic (100g)", "cost": 100},
+		{"name": "Boom", "label": "Boom (150g)", "cost": 150},
 	]
 
 	var y_offset = -70
@@ -79,29 +77,23 @@ func _build_selection_menu():
 		btn.mouse_filter = Control.MOUSE_FILTER_STOP
 		var tower_type = data["name"]
 		var tower_cost = data["cost"]
-		btn.pressed.connect(func(): _on_tower_selected(tower_type, tower_cost))
+		btn.pressed.connect(_on_tower_selected.bind(tower_type, tower_cost))
 		selection_menu.add_child(btn)
 		y_offset += 40
 
 	var cancel_btn = Button.new()
-	cancel_btn.text = "❌ Cancel"
+	cancel_btn.text = "Cancel"
 	cancel_btn.position = Vector2(-80, y_offset)
 	cancel_btn.size = Vector2(160, 35)
 	cancel_btn.mouse_filter = Control.MOUSE_FILTER_STOP
-	cancel_btn.pressed.connect(func(): _close_menu())
+	cancel_btn.pressed.connect(func(): selection_menu.hide())
 	selection_menu.add_child(cancel_btn)
 
-	# Add to CanvasLayer so it renders above game world
 	canvas_layer.add_child(selection_menu)
-
-func _close_menu():
-	selection_menu.hide()
-	menu_just_closed = true
 
 func _on_tower_selected(type, cost):
 	if gold < cost:
-		print("Not enough gold! Need ", cost, " but have ", gold)
-		_close_menu()
+		selection_menu.hide()
 		return
 	start_placing(type, cost)
 
@@ -109,7 +101,7 @@ func _process(_delta):
 	if is_placing_tower and ghost_tower:
 		ghost_tower.global_position = get_global_mouse_position()
 
-func _unhandled_input(event):
+func _input(event):
 	var is_click = (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed)
 	var is_touch = (event is InputEventScreenTouch and event.pressed)
 	var is_right_click = (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed)
@@ -125,38 +117,27 @@ func _unhandled_input(event):
 			get_viewport().set_input_as_handled()
 		return
 
-	# --- State 2: Menu is open, click outside should close it ---
-	if selection_menu and selection_menu.visible:
-		if is_click or is_touch or is_right_click or is_escape:
-			_close_menu()
+	# --- State 2: Menu is open ---
+	if selection_menu.visible:
+		if is_right_click or is_escape:
+			selection_menu.hide()
 			get_viewport().set_input_as_handled()
 		return
 
-	# --- State 3: Nothing active, click map to open build menu ---
+	# --- State 3: Click map to open build menu ---
 	if is_click or is_touch:
-		# Skip if menu was just closed this frame (from button press)
-		if menu_just_closed:
-			menu_just_closed = false
-			return
-		var click_pos = get_global_mouse_position()
-		placement_origin = click_pos
-		# Position menu in screen space (it's in CanvasLayer)
-		if is_touch:
-			selection_menu.global_position = event.position
-		else:
-			selection_menu.global_position = get_viewport().get_mouse_position()
+		placement_origin = get_global_mouse_position()
+		selection_menu.global_position = get_viewport().get_mouse_position()
 		selection_menu.show()
 		get_viewport().set_input_as_handled()
 
 func _on_speed_button_pressed():
 	is_fast_forward = !is_fast_forward
 	Engine.time_scale = 2.0 if is_fast_forward else 1.0
-	$CanvasLayer/HUD/SpeedButton.text = "⏩ 2x" if is_fast_forward else "▶ 1x"
+	$CanvasLayer/HUD/SpeedButton.text = "2x" if is_fast_forward else "1x"
 
 # --- Placement Logic ---
 func start_placing(type, cost):
-	print("Placing: ", type, " (Cost: ", cost, ")")
-
 	if ghost_tower:
 		ghost_tower.queue_free()
 
@@ -168,17 +149,13 @@ func start_placing(type, cost):
 	if tower_scenes.has(type):
 		ghost_tower = tower_scenes[type].instantiate()
 		ghost_tower.modulate = Color(1, 1, 1, 0.5)
-		# Disable combat on ghost
 		if ghost_tower.has_node("RangeArea"):
 			ghost_tower.get_node("RangeArea").monitorable = false
 			ghost_tower.get_node("RangeArea").monitoring = false
-		# Disable processing so the ghost doesn't try to target enemies
 		ghost_tower.set_process(false)
-
 		add_child(ghost_tower)
 		ghost_tower.global_position = placement_origin
 	else:
-		print("Error: No scene for tower type: ", type)
 		is_placing_tower = false
 
 func confirm_placement():
@@ -188,21 +165,18 @@ func confirm_placement():
 	gold -= current_tower_cost
 	update_ui()
 
-	# Finalize - re-enable everything
 	ghost_tower.modulate = Color(1, 1, 1, 1.0)
 	if ghost_tower.has_node("RangeArea"):
 		ghost_tower.get_node("RangeArea").monitorable = true
 		ghost_tower.get_node("RangeArea").monitoring = true
 	ghost_tower.set_process(true)
 
-	# Summon effect
 	var effect = summon_effect_scene.instantiate()
 	effect.global_position = ghost_tower.global_position
 	add_child(effect)
 
 	is_placing_tower = false
 	ghost_tower = null
-	print("Tower deployed! Gold: ", gold)
 
 func cancel_placement():
 	is_placing_tower = false
@@ -216,7 +190,6 @@ func _on_spawner_timeout():
 
 func spawn_enemy():
 	if not has_node("Path2D"):
-		print("Error: Path2D not found!")
 		return
 	var enemy = enemy_scene.instantiate()
 	enemy.health = current_wave_health
@@ -224,8 +197,8 @@ func spawn_enemy():
 	current_wave_health += 5
 
 func update_ui():
-	ui_gold.text = "💰 " + str(gold)
-	ui_lives.text = "❤️ " + str(lives)
+	ui_gold.text = "Gold: " + str(gold)
+	ui_lives.text = "Lives: " + str(lives)
 
 func take_damage(amount):
 	lives -= amount
@@ -238,5 +211,4 @@ func add_gold(amount):
 	update_ui()
 
 func game_over():
-	print("Game Over!")
 	get_tree().paused = true
