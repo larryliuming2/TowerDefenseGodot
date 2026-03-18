@@ -1,5 +1,7 @@
 extends Node2D
 
+const VERSION = "v0.3.0-20260318"
+
 # --- Game State ---
 var gold = 200
 var lives = 20
@@ -37,6 +39,26 @@ func _ready():
 	spawner_timer.timeout.connect(_on_spawner_timeout)
 	$CanvasLayer/HUD/SpeedButton.pressed.connect(_on_speed_button_pressed)
 	_build_selection_menu()
+	_add_version_label()
+
+func _add_version_label():
+	var ver_label = Label.new()
+	ver_label.text = VERSION
+	ver_label.add_theme_font_size_override("font_size", 12)
+	ver_label.add_theme_color_override("font_color", Color(1, 1, 1, 0.4))
+	ver_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	ver_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	ver_label.anchors_preset = Control.PRESET_BOTTOM_RIGHT
+	ver_label.anchor_left = 1.0
+	ver_label.anchor_top = 1.0
+	ver_label.anchor_right = 1.0
+	ver_label.anchor_bottom = 1.0
+	ver_label.offset_left = -120
+	ver_label.offset_top = -25
+	ver_label.offset_right = -5
+	ver_label.offset_bottom = -5
+	ver_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	canvas_layer.add_child(ver_label)
 
 func _build_selection_menu():
 	selection_menu = Control.new()
