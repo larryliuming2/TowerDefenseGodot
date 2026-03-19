@@ -1,6 +1,6 @@
 extends Node2D
 
-const VERSION = "v0.3.0-20260318"
+const VERSION = "v0.3.1-20260319"
 
 # --- Game State ---
 var gold = 200
@@ -62,7 +62,7 @@ func _add_version_label():
 	canvas_layer.add_child(ver_label)
 
 func _build_selection_menu():
-	# Menu size: scale 410x410 image down to 200x200
+	# Menu size: scale 410x410 image down to ~half
 	var menu_size = 200.0
 	var half = menu_size / 2.0
 
@@ -75,6 +75,7 @@ func _build_selection_menu():
 	# Background image (cross shape)
 	var bg = TextureRect.new()
 	bg.texture = menu_base_texture
+	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	bg.stretch_mode = TextureRect.STRETCH_SCALE
 	bg.size = Vector2(menu_size, menu_size)
 	bg.position = Vector2(-half, -half)
