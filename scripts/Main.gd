@@ -33,6 +33,7 @@ var tower_scenes = {
 }
 
 var selection_menu: Control = null
+var menu_base_texture = preload("res://assets/sprites/defenders/menu_base.png")
 
 func _ready():
 	update_ui()
@@ -61,57 +62,46 @@ func _add_version_label():
 	canvas_layer.add_child(ver_label)
 
 func _build_selection_menu():
+	# Menu size: scale 410x410 image down to 200x200
+	var menu_size = 200.0
+	var half = menu_size / 2.0
+
 	selection_menu = Control.new()
 	selection_menu.name = "SelectionMenu"
 	selection_menu.z_index = 2000
 	selection_menu.visible = false
 	selection_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	var bg = ColorRect.new()
-	bg.name = "BG"
-	bg.color = Color(0.1, 0.1, 0.15, 0.92)
-	bg.size = Vector2(180, 220)
-	bg.position = Vector2(-90, -110)
+	# Background image (cross shape)
+	var bg = TextureRect.new()
+	bg.texture = menu_base_texture
+	bg.stretch_mode = TextureRect.STRETCH_SCALE
+	bg.size = Vector2(menu_size, menu_size)
+	bg.position = Vector2(-half, -half)
 	bg.mouse_filter = Control.MOUSE_FILTER_STOP
 	selection_menu.add_child(bg)
 
-	var title = Label.new()
-	title.text = "Build Tower"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.position = Vector2(-85, -105)
-	title.size = Vector2(170, 30)
-	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	selection_menu.add_child(title)
-
-	var tower_data = [
-		{"name": "Sword", "label": "Sword (50g)", "cost": 50},
-		{"name": "Archer", "label": "Archer (75g)", "cost": 75},
-		{"name": "Magic", "label": "Magic (100g)", "cost": 100},
-		{"name": "Boom", "label": "Boom (150g)", "cost": 150},
-	]
-
-	var y_offset = -70
-	for data in tower_data:
-		var btn = Button.new()
-		btn.text = data["label"]
-		btn.position = Vector2(-80, y_offset)
-		btn.size = Vector2(160, 35)
-		btn.mouse_filter = Control.MOUSE_FILTER_STOP
-		var tower_type = data["name"]
-		var tower_cost = data["cost"]
-		btn.pressed.connect(_on_tower_selected.bind(tower_type, tower_cost))
-		selection_menu.add_child(btn)
-		y_offset += 40
-
-	var cancel_btn = Button.new()
-	cancel_btn.text = "Cancel"
-	cancel_btn.position = Vector2(-80, y_offset)
-	cancel_btn.size = Vector2(160, 35)
-	cancel_btn.mouse_filter = Control.MOUSE_FILTER_STOP
-	cancel_btn.pressed.connect(func(): selection_menu.hide())
-	selection_menu.add_child(cancel_btn)
+	# Tower buttons positioned on each arm of the cross
+	# Top: Archer (75g)
+	_add_menu_button("Archer", 75, Vector2(-35, -half), Vector2(70, 55))
+	# Bottom: Sword (50g)
+	_add_menu_button("Sword", 50, Vector2(-35, half - 55), Vector2(70, 55))
+	# Left: Magic (100g)
+	_add_menu_button("Magic", 100, Vector2(-half, -35), Vector2(55, 70))
+	# Right: Boom (150g)
+	_add_menu_button("Boom", 150, Vector2(half - 55, -35), Vector2(55, 70))
 
 	canvas_layer.add_child(selection_menu)
+
+func _add_menu_button(tower_type: String, cost: int, pos: Vector2, btn_size: Vector2):
+	var btn = Button.new()
+	btn.position = pos
+	btn.size = btn_size
+	btn.mouse_filter = Control.MOUSE_FILTER_STOP
+	btn.flat = true
+	btn.modulate = Color(1, 1, 1, 0)  # Fully transparent button
+	btn.pressed.connect(_on_tower_selected.bind(tower_type, cost))
+	selection_menu.add_child(btn)
 
 func _on_tower_selected(type, cost):
 	if gold < cost:
